@@ -23,21 +23,6 @@ hike %<>%
   arrange(highest_point, highpoint) %>% 
   mutate(trail_id = row_number())
 
-### Create features dataframe
-features <- hike %>%
-  select(length, name, rating, features) %>%
-  unnest(features) %>%
-  rename(feature = features) %>%
-  # create highest point per feature and order ids for nice plotting
-  group_by(feature) %>%
-  mutate(highestrating = max(rating),
-         highestlength = case_when(rating == highestrating ~ length),
-         highestname = case_when(rating == highestrating ~ name)) %>%
-  ungroup() %>%
-  arrange(feature, length) %>% 
-  mutate(id = row_number())
-  
-
 ### Plot - high points by region
 hike %>%
   mutate(highest_id = case_when(highpoint == highest_point ~ trail_id)) %>%
@@ -49,11 +34,11 @@ hike %>%
   scale_y_continuous(breaks = seq(-20000, 15000, 5000), label = comma) +
   theme_minimal() +
   theme(text = element_text(family = 'Avenir', color = "#011936"),
-        plot.title = element_text(face = "bold"),
+        plot.title = element_text(family = 'Montserrat', face = "bold", size = 20),
         axis.title.x=element_blank(),
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank()) +
-  labs(title = "What is the gain of each trail in Washington?",
+  labs(title = "ELEVATION OF WASHINGTON TRAILS",
        subtitle = "This visualization displays low points and high points of each trail in the Pacific Northwest by region.",
        caption = "Data from from Washington Trails Association courtesy of the TidyX crew, Ellis Hughes and Patrick Ward",
        y = 'Feet above sea level')
